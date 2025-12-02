@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>隱性需求者扭蛋機 | Hidden Needs Gachapon</title>
+    
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Maru+Gothic:wght@500;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. 視覺識別系統 (Visual Identity) --- */
+        :root {
+            /* 指定色票 */
+            --bg-color: #F4EBE4;        /* 溫暖米白背景 */
+            --machine-color: #FD9270;   /* 機身珊瑚橘 */
+            --title-color: #B3CAD8;     /* 標題柔和藍 */
+            
+            /* 扭蛋色系 (8顆 - 實際使用前6顆) */
+            --cap-1: #82ABA3; /* 智能障礙者 */
+            --cap-2: #9BC4BC; /* 自閉症光譜 */
+            --cap-3: #FEC37D; /* 心理類需求者 */
+            --cap-4: #FFD4A3; /* 妥瑞症 */
+            --cap-5: #B3CAD8; /* ADHD */
+            --cap-6: #D1E3ED; /* 學習障礙 */
+            --cap-7: #E7A4E4; 
+            --cap-8: #F3C4F1; 
+
+            /* 通用顏色 */
+            --btn-green: #478058;       /* 森林綠 PUSH 按鈕 */
+            --btn-shadow: #2E5239;      /* 按鈕陰影色 */
+            --btn-red: #FF6B6B;         /* 重點強調紅 */
+            --border-color: #4A3B32;    /* 深咖啡色線條 */
+            
+            /* Fonts */
+            --font-pixel: 'DotGothic16', sans-serif;
+            --font-round: 'Zen Maru Gothic', sans-serif;
+            --font-retro: 'Cinzel', serif; /* 書籤用字體 */
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-round);
+            margin: 0;
+            padding: 20px;
+            min-height: 10vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--border-color);
+            background-image: radial-gradient(#D6C6B9 10%, transparent 11%);
+            background-size: 20px 20px;
+        }
+
+        /* --- 標題區 --- */
+        .header-box {
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-family: var(--font-pixel);
+            font-size: 2.5rem;
+            color: #fff;
+            background-color: var(--title-color);
+            padding: 10px 30px;
+            border: 4px solid var(--border-color);
+            border-radius: 15px;
+            box-shadow: 6px 6px 0px var(--border-color);
+            text-shadow: 2px 2px 0px var(--border-color);
+            margin: 0;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        .header-decor {
+            position: absolute;
+            top: -20px; right: -20px;
+            font-size: 2rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        /* --- 2. 扭蛋機主舞台 --- */
+        .gacha-machine {
+            position: relative;
+            width: 340px;
+            background: var(--machine-color);
+            border: 4px solid var(--border-color);
+            border-radius: 40px 40px 15px 15px;
+            padding: 25px 20px 20px;
+            box-shadow: 12px 12px 0px rgba(74, 59, 50, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            z-index: 10;
+        }
+
+        .gacha-machine::after {
+            content: '';
+            position: absolute;
+            top: 15px; left: 15px;
+            width: 90%; height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 20px;
+            pointer-events: none;
+        }
+
+        .window {
+            width: 280px;
+            height: 220px;
+            background: #fff;
+            border: 4px solid var(--border-color);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: inset 6px 6px 0 rgba(0,0,0,0.05);
+        }
+        
+        /* 調整扭蛋機視窗內的球堆，只保留 6 顆 */
+        .ball-stack {
+            position: absolute;
+            width: 50px; height: 50px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+        }
+        .bs1 { background: var(--cap-1); top: 140px; left: 20px; transform: rotate(15deg); }
+        .bs2 { background: var(--cap-2); top: 150px; left: 70px; transform: rotate(-10deg); }
+        .bs3 { background: var(--cap-3); top: 130px; left: 120px; transform: rotate(45deg); }
+        .bs4 { background: var(--cap-4); top: 160px; left: 170px; transform: rotate(-20deg); }
+        .bs5 { background: var(--cap-5); top: 100px; left: 50px; transform: rotate(10deg); z-index:-1;}
+        .bs6 { background: var(--cap-6); top: 110px; left: 150px; transform: rotate(-5deg); z-index:-1;}
+
+        .controls-area {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+        }
+
+        .coin-slot {
+            font-family: var(--font-pixel);
+            font-size: 0.8rem;
+            color: var(--border-color);
+            text-align: center;
+            background: #EAEAEA;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+        }
+        .coin-slot span {
+            display: block;
+            width: 40px;
+            height: 6px;
+            background: #333;
+            margin: 4px auto 0;
+            border-radius: 4px;
+        }
+
+        .push-btn {
+            width: 90px;
+            height: 90px;
+            background: var(--btn-green);
+            border: 4px solid var(--border-color);
+            border-radius: 50%;
+            color: white;
+            font-family: var(--font-pixel);
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--btn-shadow);
+            transition: all 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+
+        .push-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 var(--btn-shadow);
+        }
+        
+        .push-btn:disabled {
+            background: #CCC;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: translateY(6px);
+        }
+
+        .exit-slot {
+            width: 180px;
+            height: 40px;
+            background: #3E3E3E;
+            margin-top: 15px;
+            border-radius: 0 0 15px 15px;
+            border: 4px solid var(--border-color);
+            border-top: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .dropped-capsule {
+            width: 36px; height: 36px; border-radius: 50%; 
+            border: 3px solid var(--border-color);
+            display: none;
+            animation: dropIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* --- 3. 蒐集冊 (The Collection) --- */
+        .collection-container {
+            width: 95%;
+            max-width: 600px;
+            background: white;
+            border: 4px solid var(--border-color);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 8px 8px 0 var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .collection-title {
+            font-family: var(--font-pixel);
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #DDD;
+            padding-bottom: 10px;
+        }
+
+        /* 調整為 6 個欄位 (3x2) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px;
+            justify-items: center;
+        }
+
+        @media (max-width: 500px) { /* 調整斷點讓手機維持 2 欄 */
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .slot-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .slot {
+            width: 70px; height: 70px;
+            background: #EAEAEA;
+            border: 3px dashed #CCC;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pixel-brain-icon {
+            width: 45px; height: 45px;
+            fill: #CCC;
+            filter: grayscale(100%);
+            transition: all 0.3s;
+            shape-rendering: crispEdges; 
+        }
+
+        .slot.unlocked {
+            border: 3px solid var(--border-color);
+            background: #FFF;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+            animation: bounceIn 0.5s;
+        }
+        
+        .slot.unlocked .pixel-brain-icon {
+            filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.2));
+            transform: scale(1.1);
+        }
+
+        .slot.unlocked:hover {
+            transform: translateY(-3px);
+        }
+
+        /* --- 4. 結語畫面 --- */
+        .end-screen-container {
+            display: none;
+            margin-top: 20px;
+            background: #fff;
+            border: 4px solid var(--border-color);
+            padding: 25px;
+            border-radius: 15px;
+            animation: bounceIn 1s;
+            max-width: 550px;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+            line-height: 1.8;
+            position: relative;
+        }
+        .end-screen-container h3 {
+            font-family: var(--font-pixel);
+            color: var(--btn-green);
+            margin-top: 0;
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        .end-screen-container ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .end-screen-container li {
+            margin-bottom: 10px;
+        }
+        .end-screen-container strong {
+            color: var(--machine-color);
+        }
+        
+        .end-btn-area {
+            text-align: center; 
+            margin-top: 25px; 
+            padding-top: 15px; 
+            border-top: 2px dashed #eee;
+        }
+
+        /* --- 5. 彈跳視窗 (Modal) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(74, 59, 50, 0.85);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 4px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 10px 10px 0 #000;
+            animation: cardPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        /* Intro Modal 特殊樣式 */
+        .intro-content {
+            padding: 30px;
+            line-height: 1.6; /* 行距調整 */
+            font-size: 0.95rem; /* 字體縮小 */
+        }
+        .intro-content h2 {
+            font-family: var(--font-pixel);
+            color: var(--btn-green);
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .intro-section-title {
+            background: var(--title-color);
+            color: #fff;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        .reference-text {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 20px;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+            text-align: right;
+        }
+        /* Intro 裡的列表樣式 */
+        .intro-list {
+            margin: 5px 0; 
+            padding-left: 20px;
+        }
+        .intro-list li {
+            margin-bottom: 4px;
+        }
+
+        /* 內容卡片樣式 */
+        .card-top-bar { height: 20px; border-bottom: 3px solid var(--border-color); }
+        .card-body { padding: 25px; line-height: 1.7; }
+        .card-header-group {
+            display: flex; align-items: center; margin-bottom: 20px;
+            border-bottom: 2px dashed #EEE; padding-bottom: 15px;
+        }
+        .card-icon-box {
+            width: 70px; height: 70px; border-radius: 12px;
+            border: 3px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 15px; flex-shrink: 0; background: #fff;
+        }
+        .modal-brain-svg { width: 50px; height: 50px; filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2)); }
+        .card-title { font-family: var(--font-pixel); font-size: 1.4rem; color: var(--border-color); margin: 0; }
+        .card-subtitle { font-size: 0.9rem; color: #888; margin-top: 5px; }
+        
+        .card-content h3 {
+            font-size: 1.1rem; color: var(--btn-red); margin: 15px 0 10px;
+            font-family: var(--font-pixel); display: flex; align-items: center;
+        }
+        .card-content h3::before {
+            content: ''; display: inline-block; width: 8px; height: 8px;
+            background: var(--btn-red); margin-right: 8px; transform: rotate(45deg);
+        }
+        .card-content ul { padding-left: 20px; margin: 0; list-style-type: circle; }
+        .card-content li { margin-bottom: 8px; font-size: 1rem; }
+        
+        /* 新增：用於註釋的樣式 */
+        .card-content .note {
+            font-size: 0.85rem;
+            color: #A0A0A0;
+            margin-top: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #DDD;
+        }
+        /* 新增：隱藏互動指南 */
+        .interaction-guide {
+            display: none;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 2px dashed var(--title-color);
+            animation: fadeIn 0.5s;
+        }
+        
+        .card-footer {
+            padding: 15px;
+            background: #F9F9F9;
+            border-top: 3px solid var(--border-color);
+            display: flex;
+            justify-content: center; /* 預設居中 */
+            gap: 15px;
+        }
+        
+        /* 隱藏/顯示控制類別 */
+        .btn-group-review { display: none; } /* 用於回顧模式 */
+        .btn-group-gacha { display: flex; gap: 15px; width: 100%; justify-content: center;} /* 用於扭蛋模式 */
+
+        .action-btn {
+            font-family: var(--font-pixel);
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--border-color);
+            border-radius: 50px;
+            transition: all 0.1s;
+            padding: 10px 25px;
+            border: 3px solid var(--border-color);
+            flex: 1; /* 讓按鈕等寬 */
+            max-width: 180px;
+        }
+        .btn-primary { background: var(--title-color); color: #fff; }
+        .btn-secondary { background: #fff; color: var(--border-color); }
+        .btn-close { background: var(--btn-green); color: #fff; max-width: 200px; flex: none; width: auto; padding: 10px 40px;}
+
+        .action-btn:hover { transform: translateY(2px); box-shadow: 2px 2px 0 var(--border-color); filter: brightness(1.1); }
+
+        /* --- 6. 彩蛋 (Easter Egg) --- */
+        .easter-egg-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--machine-color);
+            border: 3px solid var(--border-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-family: var(--font-pixel);
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+            z-index: 90;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .easter-egg-btn:hover { transform: scale(1.1); }
+        
+        /* 書籤 Modal 內容 */
+        .bookmark-container {
+            background: #FFF8E7; /* 泛黃紙張色 */
+            padding: 40px 30px;
+            border: 2px solid #5A4A42;
+            width: 320px;
+            position: relative;
+            box-shadow: 15px 15px 0 rgba(0,0,0,0.3);
+            text-align: center;
+            background-image: 
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* 書籤上方的洞 */
+        .bookmark-container::before {
+            content: '';
+            width: 20px; height: 20px;
+            background: var(--bg-color); /* 穿透背景色 */
+            border: 2px solid #5A4A42;
+            border-radius: 50%;
+            position: absolute;
+            top: 15px; left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 絲帶 */
+        .bookmark-container::after {
+            content: '';
+            width: 6px; height: 60px;
+            background: var(--btn-red);
+            position: absolute;
+            top: -40px; left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        .bookmark-text {
+            font-family: var(--font-retro);
+            color: #4A3B32;
+            margin-top: 20px;
+        }
+        .quote-en {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            display: block;
+        }
+        .quote-cn {
+            font-family: var(--font-round);
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .author {
+            font-size: 0.9rem;
+            color: #888;
+            border-top: 1px solid #4A3B32;
+            padding-top: 10px;
+            display: inline-block;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%; text-align: center; font-size: 0.8rem;
+            color: #777; padding: 30px 20px; margin-top: auto;
+            border-top: 2px dashed #D6C6B9; background: rgba(255,255,255,0.4);
+        }
+        .footer p { margin: 5px 0; }
+        .footer .reference-block {
+            margin: 5px 0;
+            display: block;
+            line-height: 1.5; /* 確保內容不會黏在一起 */
+            font-size: 0.65rem; /* 字體再縮小 */
+        }
+
+        /* Animation Keyframes (保留) */
+        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); } }
+        .shaking { animation: shake 0.5s infinite; }
+        @keyframes dropIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes cardPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes bounceIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        @keyframes confetti-fall { to { transform: translateY(100vh) rotate(720deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .confetti { position: fixed; width: 12px; height: 12px; z-index: 200; border: 1px solid rgba(0,0,0,0.1); }
+
+    </style>
+</head>
+<body>
+
+    <!-- 標題 -->
+    <div class="header-box">
+        <h1>隱性需求者扭蛋機</h1>
+        <div class="header-decor">✨</div>
+    </div>
+
+    <!-- 扭蛋機 -->
+    <div class="gacha-machine" id="machine">
+        <div class="window">
+            <!-- 6 顆扭蛋 -->
+            <div class="ball-stack bs1"></div>
+            <div class="ball-stack bs2"></div>
+            <div class="ball-stack bs3"></div>
+            <div class="ball-stack bs4"></div>
+            <div class="ball-stack bs5"></div>
+            <div class="ball-stack bs6"></div>
+        </div>
+
+        <div class="controls-area">
+            <div class="coin-slot">
+                Free Play<br>免費遊玩
+                <span></span>
+            </div>
+            <button class="push-btn" id="pushBtn" onclick="playGacha()">PUSH</button>
+        </div>
+
+        <div class="exit-slot">
+            <div class="dropped-capsule" id="droppedCapsule"></div>
+        </div>
+    </div>
+
+    <!-- 蒐集冊 (6個欄位) -->
+    <div class="collection-container">
+        <div class="collection-title">📔 知識圖鑑 (Collection)</div>
+        
+        <div class="grid-container">
+            <!-- 6格 Slot -->
+            <div class="slot-item" onclick="reviewCard(0)" title="智能障礙者（ID）"><div class="slot" id="slot0"></div></div>
+            <div class="slot-item" onclick="reviewCard(1)" title="自閉症光譜（ASD）"><div class="slot" id="slot1"></div></div>
+            <div class="slot-item" onclick="reviewCard(2)" title="心理類需求者"><div class="slot" id="slot2"></div></div>
+            <div class="slot-item" onclick="reviewCard(3)" title="妥瑞症（Tourette’s Disorder）"><div class="slot" id="slot3"></div></div>
+            <div class="slot-item" onclick="reviewCard(4)" title="ADHD"><div class="slot" id="slot4"></div></div>
+            <div class="slot-item" onclick="reviewCard(5)" title="學習障礙（LD）"><div class="slot" id="slot5"></div></div>
+            <!-- 已移除 slot6 和 slot7 -->
+        </div>
+        
+        <!-- 結語畫面 (End Screen) -->
+        <div class="end-screen-container" id="endScreen">
+            <h3>🤝 面對「隱性需求者」，我們可以怎麼相處？</h3>
+            <p style="font-size:1.1rem; font-weight:bold; color:#555; text-align:center; margin: 10px 0;">尊重、同理、平常心對待。</p>
+            <ul>
+                <li><strong>尊重隱私：</strong> 有人選擇隱藏身份、狀況，有人願意揭露，都值得尊重。</li>
+                <li><strong>理解每個人的需求不同：</strong> 隱性障礙需求者的狀況非常多元，每個人需要的協助也不太一樣。(有些人不一定需要他人協助喔！)</li>
+                <li><strong>若察覺需要協助：</strong> 在安全與能力範圍內，可詢問後協助。</li>
+            </ul>
+            
+            <div class="end-btn-area">
+                <button class="action-btn btn-primary" id="resumeBtn" onclick="resumeGame()">再抽一顆</button>
+            </div>
+
+            <div style="text-align:center; margin-top:20px; color:var(--btn-red); font-family:var(--font-pixel);">
+                <span style="font-size:1.5rem;">♥</span> 謝謝有你讓我們的校園更友善 <span style="font-size:1.5rem;">♥</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 左下角彩蛋按鈕 -->
+    <button class="easter-egg-btn" onclick="showBookmark()">🎁 小彩蛋</button>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>@2025 育成高中 特教組 楊淳意老師製作</p>
+        <p class="reference-block">
+            📚 參考資料：
+            CRPD《認識身心障礙者特質與需求》教材、
+            《特殊教育學生及幼兒鑑定辦法》、《精神疾病診斷與統計手冊第五版》（DSM-5）、
+            《第一次教 ADHD 弟就上手：青少年注意力缺陷（ADHD）知能推廣教材》
+        </p>
+    </div>
+
+    <!-- 1. 使用說明彈窗 (Intro Modal) -->
+    <div class="modal-overlay" id="introModal" style="display:none;">
+        <div class="card">
+            <div class="intro-content">
+                <h2>📜 扭蛋機使用說明</h2>
+                <p><b>隱性障礙（hidden disabilities）</b>又稱非顯性障礙（non-apparent disabilities）是指從外表看不太出來，但會影響生活與學習的身心狀況。</p>
+                <p>這些需求很多元，包含但不限於：</p>
+                
+                <div class="intro-section-title">📌 生活中常見類型</div>
+                <ul class="intro-list">
+                    <li>情緒心理狀況：焦慮、憂鬱、思覺失調、ADHD、強迫症......</li>
+                    <li>自閉症光譜(含亞斯伯格症)</li>
+                    <li>視覺功能受限：視力弱、視野受限等、聽力損失</li>
+                    <li>認知功能受限：失智症、腦傷、學習障礙</li>
+                    <li>不易察覺的身心疾病：糖尿病、慢性疼痛、呼吸系統疾病等</li>
+                </ul>
+
+                <div class="intro-section-title">📌 在特教學生中</div>
+                <p>可能包含自閉症、學習障礙、情緒行為障礙、身體病弱、其他障礙等，以及聽覺障礙、視覺障礙(未使用明顯輔具)等學生。</p>
+
+                <p style="text-align:center; font-weight:bold; color:var(--machine-color); margin-top:20px;">
+                    現在，邀請你轉個扭蛋，<br>一起認識隱性需求者！
+                </p>
+                
+                <div class="reference-text">
+                    參考資料：UK Government Disability Unit. (2020). Living with non-visible disabilities. UK Government.
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="action-btn btn-primary" onclick="closeIntro()">開始扭蛋</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 卡片彈窗 (Card Modal) -->
+    <div class="modal-overlay" id="cardModal">
+        <div class="card" id="cardContainer">
+            <div class="card-top-bar" id="cardTopBar"></div>
+            
+            <div class="card-body">
+                <div class="card-header-group">
+                    <div class="card-icon-box" id="cardIconBox"></div>
+                    <div>
+                        <h2 class="card-title" id="cardTitle">Title</h2>
+                        <div class="card-subtitle">隱性需求扭蛋機</div>
+                    </div>
+                </div>
+                
+                <div class="card-content" id="cardContent">
+                    <!-- 內容將由 JS 動態生成 (特質 + 按鈕 + 隱藏的相處指南) -->
+                </div>
+            </div>
+            
+            <div class="card-footer">
+                <!-- 扭蛋當下的按鈕 (二選一) -->
+                <div class="btn-group-gacha" id="btnGroupGacha">
+                    <button class="action-btn btn-primary" onclick="closeCard('next')">再抽一顆</button>
+                    <button class="action-btn btn-secondary" onclick="closeCard('end')">結束扭蛋</button>
+                </div>
+                <!-- 回顧模式的按鈕 (只有關閉) -->
+                <div class="btn-group-review" id="btnGroupReview">
+                    <button class="action-btn btn-close" onclick="closeCard('review')">關閉卡片</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 書籤彩蛋彈窗 (Bookmark Modal) -->
+    <div class="modal-overlay" id="bookmarkModal" onclick="closeBookmark(event)">
+        <div class="bookmark-container">
+            <div class="bookmark-text">
+                <span class="quote-en">
+                    “We all should know that diversity makes for a rich tapestry, and we must understand that all the threads of the tapestry are equal in value no matter what their color.”
+                </span>
+                <span class="quote-cn">
+                    「我們應當深知，正是多元性織成了絢麗的織錦；而每一縷絲線，無論色澤為何，皆擁有同等珍貴的價值。」
+                </span>
+                <span class="author">
+                    — 瑪雅·安傑洛 (Maya Angelou)
+                </span>
+            </div>
+            <div style="margin-top:20px; font-size:0.8rem; color:#888;">(點擊背景關閉)</div>
+        </div>
+    </div>
+
+    <script>
+        // --- SVG Icons ---
+        const brainSVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="pixel-brain-icon"><path d="M7 4h10v2h2v4h2v6h-2v4h-4v2H9v-2H5v-4H3v-6h2V6h2V4z M7 6v2H5v6h2v4h2v2h6v-2h2v-4h2v-6h-2V6H7z M9 8h6v2h-2v2h-2V8z M11 12h2v2h-2v-2z" /></svg>`;
+
+        // --- 資料 (更新為 6 個項目) ---
+        const gachaData = [
+            { // 0. 智能障礙者（Intellectual Disability, ID） 
+                colorVar: 'var(--cap-1)', title: '智能障礙者（Intellectual Disability, ID）', 
+                initialContent: `<h3>✏️ 特質</h3><ul><li>對抽象思考與理解較困難。</li><li>容易受環境影響，注意力維持時間較短。</li><li>接收指令與回應較慢。</li><li>在理解人際互動與情緒反應上比較慢、較不敏感。</li></ul>`,
+                interactionGuide: `<h3>✨ 我們可以怎麼相處？</h3><ul><li>溝通時使用簡單、具體的詞語、指令。</li><li>給予多一些回應時間。</li><li>可以協助確認是否理解資訊。</li><li>若出現不太適合的行為，可以友善提醒。</li></ul>`
+            },
+            { // 1. 自閉症光譜（Autism Spectrum Disorder, ASD）
+                colorVar: 'var(--cap-2)', title: '自閉症光譜（Autism Spectrum Disorder, ASD）', 
+                initialContent: `<h3>✏️ 特質</h3><ul><li>社交互動與溝通能力受限，如：理解言外之意、溝通時易誤解他人的意思。</li><li>常出現固定、重複的行為或興趣，如：每天有堅持的儀式、特別喜歡某一個興趣。</li><li>自閉症光譜在社會互動、語言表達、智能等方面的差異很大。</li></ul><p class="note">（DSM-5 已將亞斯伯格症候群、自閉症等併入 ASD。）</p><p class="note">📝詳細內容可參考 DSM-5，正式診斷須由醫師評估。</p>`,
+                interactionGuide: `<h3>✨ 我們可以怎麼相處？</h3><ul><li>溝通時可用較直白的方式溝通。</li><li>先說明預告活動、規則與流程，讓他們有心理準備。</li><li>明確講清楚流程與步驟，不要用太多隱含的意思。</li><li>若出現不太適合的行為，可以友善提醒。</li></ul>`
+            },
+            { // 2. 心理類需求者
+                colorVar: 'var(--cap-3)', title: '心理類需求者', 
+                initialContent: `
+                    <p><b>憂鬱症（Major Depressive Disorder）</b></p>
+                    <h3>✏️ 定義</h3>
+                    <p>在至少 2 週內，持續出現情緒低落或失去興趣，並造成明顯的生活、學業、人際功能受損。</p>
+                    <h3>✏️ 常見類型核心症狀</h3>
+                    <ul>
+                        <li>情緒低落、失去興趣、體重或食慾變化、失眠或嗜睡、疲倦、動作變慢或煩躁、自責或覺得毫無價值、注意力下降、反覆出現死亡或自殺意念。</li>
+                    </ul>
+
+                    <p><b>焦慮症（Anxiety Disorders）</b></p>
+                    <h3>✏️ 定義</h3>
+                    <p>主要表現為「過度焦慮或恐懼」，其強度超過情境所需，且難以控制，造成明顯困擾或功能受損。</p>
+                    <h3>✏️ 常見類型核心症狀</h3>
+                    <ul>
+                        <li>廣泛性焦慮症（GAD）：過度擔心至少 6 個月、緊繃、疲倦、注意力差、睡眠困難。</li>
+                        <li>恐慌症：突發強烈恐慌、心悸、喘不過氣、害怕死亡或失控。</li>
+                        <li>社交焦慮症：害怕被他人評價，在社交場合極度不安、迴避互動。</li>
+                    </ul>
+
+                    <p><b>思覺失調（Schizophrenia）</b></p>
+                    <h3>✏️ 定義 </h3>
+                    <p>是一種長期的精神疾患，至少持續 6 個月，症狀會影響現實感、思考、情緒、行為與生活功能。</p>
+                    <h3>✏️ 核心症狀</h3>
+                    <ul>
+                        <li>妄想（如被害、被監視）、幻覺（常見為幻聽）、語言混亂（難以理解、跳躍式說話）、行為表現異於常人、情緒平淡或動機下降等。</li>
+                    </ul>
+                    <p class="note">📝詳細內容可參考 DSM-5，正式診斷須由醫師評估</p>
+                `,
+                interactionGuide: `
+                    <h3>✨ 我們可以怎麼相處？（大原則）</h3>
+                    <ul>
+                        <li><b>傾聽與陪伴（不否定、不批評）：</b>
+                            <ul>
+                                <li>避免說「想太多」、給予太多建議 →</li>
+                                <li>給予同理回應「感謝你願意告訴我」、</li>
+                                <li>有時傾聽就是最好的支持方式！</li>
+                            </ul>
+                        </li>
+                        <li><b>尊重、同理：</b>
+                            <ul>
+                                <li>有時候能在他人面前展現出正向、開朗的一面，</li>
+                                <li>但不代表那些困難都消失了~</li>
+                            </ul>
+                        </li>
+                        <li><b>適時尋求專業協助：</b>
+                            <ul>
+                                <li>鼓勵尋求專業協助。若出現自殺、自傷等警訊，可陪同當事人一起尋求信任的師長或專業人員協助。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                `
+            },
+            { // 3. 妥瑞症（Tourette’s Disorder）
+                colorVar: 'var(--cap-4)', title: '妥瑞症（Tourette’s Disorder）', 
+                initialContent: `
+                    <h3>✏️ 定義</h3>
+                    <p>為神經發展因素，造成「多種動作抽動」及「至少一種發聲抽動」症狀，持續至少 1 年，通常會於18歲前發生。</p>
+                    <h3>✏️ 核心症狀</h3>
+                    <ul>
+                        <li>動作抽動：反覆且不自主的眨眼、聳肩、甩頭、扭動</li>
+                        <li>發聲抽動：咳嗽聲、清喉嚨、吸氣聲、短促叫聲等</li>
+                    </ul>
+                    <p class="note">抽動強度起伏並非個人可以控制。</p>
+                `,
+                interactionGuide: `
+                    <h3>✨ 相處方式</h3>
+                    <ul>
+                        <li>理解抽動(tic) 不是故意的，不要盯著看、取笑</li>
+                        <li>平常心對待，不需要特別關注</li>
+                    </ul>
+                `
+            },
+            { // 4. 注意力不足／過動症（Attention-Deficit/Hyperactivity Disorder, ADHD）
+                colorVar: 'var(--cap-5)', title: 'ADHD', 
+                initialContent: `
+                    <h3>✏️ 定義</h3>
+                    <p>ADHD 因神經發展因素，致在注意力不足、過動、衝動等行為，並造成學業、生活或人際的功能影響，通常在 12 歲前開始出現。</p>
+                    <h3>✏️ 核心特質</h3>
+                    <p>可分為：注意力不足型、過動／衝動型、綜合型。</p>
+                    <p><b>注意力不足（Inattention）</b></p>
+                    <ul>
+                        <li>容易分心、走神</li>
+                        <li>難以維持專注（上課、閱讀、對話）</li>
+                        <li>常弄丟東西、忘記作業或指令</li>
+                        <li>任務不易開始或完成</li>
+                        <li>組織與時間管理困難</li>
+                    </ul>
+                    <p><b>過動／衝動（Hyperactivity & Impulsivity）</b></p>
+                    <ul>
+                        <li>坐不住、常搖晃或移動</li>
+                        <li>容易打斷別人、輪流困難</li>
+                        <li>行為或情緒反應較衝動</li>
+                        <li>難以安靜進行活動</li>
+                    </ul>
+                    <p class="note">📝詳細內容可參考 DSM-5，正式診斷須由醫師評估。</p>
+                `,
+                interactionGuide: `
+                    <h3>✨ 我們可以如何相處？</h3>
+                    <ul>
+                        <li>理解差異：有時候同學的行為並非故意，而是大腦反應方式和多數人不太相同</li>
+                        <li>若有不合宜行為、友善提醒，如：被打斷時說「等我一下，我還沒講完」</li>
+                        <li>當對方有情緒高亢時，生氣、低落時，給予冷靜時間</li>
+                        <li>平常心、多肯定優勢：ADHD特質者有許多優勢，如：具創意、幽默、活潑等，小組合作時可給予其擅長的工作</li>
+                    </ul>
+                `
+            },
+            { // 5. 學習障礙（Learning Disabilities, LD）
+                colorVar: 'var(--cap-6)', title: '學習障礙（Learning Disabilities, LD）', 
+                initialContent: `
+                    <h3>✏️ 特質</h3>
+                    <p>因大腦神經心理發展，在聽、說、讀、寫、算等方面有顯著困難。</p>
+                    <p>並不是因為學習動機、感官、智能或情緒造成的。</p>
+                    <p style="font-weight:bold; margin-top:10px;">特點包括：</p>
+                    <ul>
+                        <li>智力正常或以上。</li>
+                        <li>內在能力有明顯差異（如：閱讀理解佳但數學運算很弱）。</li>
+                        <li>就算接受一般教學協助，聽覺理解、口語表達、識字、閱讀理解、書寫、數學運算等學習表現仍有顯著困難。</li>
+                    </ul>
+                `,
+                interactionGuide: `
+                    <h3>✨ 我們可以怎麼相處？</h3>
+                    <ul>
+                        <li>1. 以理解與尊重：每個人都有不同的優弱勢領域</li>
+                        <li>2. 教師或學校可以提供更合適學習表達管道，例如：
+                            <ul style="list-style-type: none; padding-left: 15px; margin-top: 5px;">
+                                <li>識字困難 → 報讀功能</li>
+                                <li>書寫困難 → 電腦輸入取代手寫</li>
+                            </ul>
+                        </li>
+                    </ul>
+                `
+            }
+        ];
+
+        // --- 變數 ---
+        let currentStage = 0;
+        const totalItems = 6; // 更新總數
+        let collected = new Array(totalItems).fill(false); // 更新陣列大小
+        const machine = document.getElementById('machine');
+        const btn = document.getElementById('pushBtn');
+        const droppedCap = document.getElementById('droppedCapsule');
+        const endScreen = document.getElementById('endScreen');
+        const resumeBtn = document.getElementById('resumeBtn');
+
+        // --- 初始化 ---
+        window.onload = function() {
+            initSlots();
+            // 頁面載入後顯示使用說明
+            setTimeout(() => {
+                document.getElementById('introModal').style.display = 'flex';
+            }, 500);
+        };
+
+        function initSlots() {
+            for(let i=0; i<totalItems; i++) {
+                document.getElementById(`slot${i}`).innerHTML = brainSVG;
+            }
+        }
+
+        // --- 使用說明控制 ---
+        function closeIntro() {
+            document.getElementById('introModal').style.display = 'none';
+        }
+
+        // --- 互動切換邏輯 (新功能) ---
+        function toggleInteraction(index) {
+            const guide = document.getElementById('interactionGuideBody');
+            const btn = document.getElementById('toggleInteractionBtn');
+            
+            if (guide.style.display === 'none' || guide.style.display === '') {
+                // 顯示相處指南
+                guide.style.display = 'block';
+                btn.innerText = '◀ 隱藏相處指南';
+                btn.classList.add('btn-secondary');
+                btn.classList.remove('btn-primary');
+            } else {
+                // 隱藏相處指南
+                guide.style.display = 'none';
+                btn.innerText = '💡 如何相處？ (點擊展開)';
+                btn.classList.add('btn-primary');
+                btn.classList.remove('btn-secondary');
+            }
+        }
+
+        // --- 扭蛋邏輯 ---
+        function playGacha() {
+            if (currentStage >= totalItems) return;
+
+            // 如果結語已經顯示，先隱藏
+            endScreen.style.display = 'none';
+
+            btn.disabled = true;
+            machine.classList.add('shaking');
+            
+            setTimeout(() => {
+                machine.classList.remove('shaking');
+                droppedCap.style.display = 'block';
+                droppedCap.style.background = gachaData[currentStage].colorVar;
+                
+                setTimeout(() => {
+                    showCard(currentStage, 'gacha'); // 模式: 扭蛋中
+                }, 800);
+            }, 1000);
+        }
+
+        // --- 卡片顯示 (已更新以實現特質/相處切換) ---
+        function showCard(index, mode) {
+            const data = gachaData[index];
+            const modal = document.getElementById('cardModal');
+            
+            // 填入資料
+            document.getElementById('cardTopBar').style.background = data.colorVar;
+            const iconBox = document.getElementById('cardIconBox');
+            iconBox.innerHTML = brainSVG;
+            const svg = iconBox.querySelector('svg');
+            svg.classList.add('modal-brain-svg');
+            svg.style.fill = data.colorVar;
+            
+            document.getElementById('cardTitle').innerText = data.title;
+            
+            // 构建内容区域 (Trait + Button + Hidden Interaction)
+            const contentHTML = `
+                ${data.initialContent}
+                
+                <div style="text-align:center; margin: 20px 0;">
+                    <button id="toggleInteractionBtn" class="action-btn btn-primary" onclick="toggleInteraction(${index})">
+                        💡 如何相處？ (點擊展開)
+                    </button>
+                </div>
+
+                <div id="interactionGuideBody" class="interaction-guide">
+                    ${data.interactionGuide}
+                </div>
+            `;
+            
+            document.getElementById('cardContent').innerHTML = contentHTML;
+            
+            // 處理回顧模式：預設展開相處指南
+            if (mode === 'review') {
+                document.getElementById('interactionGuideBody').style.display = 'block';
+                document.getElementById('toggleInteractionBtn').innerText = '◀ 隱藏相處指南';
+                document.getElementById('toggleInteractionBtn').classList.add('btn-secondary');
+                document.getElementById('toggleInteractionBtn').classList.remove('btn-primary');
+            }
+
+            // 切換按鈕組
+            if (mode === 'gacha') {
+                document.getElementById('btnGroupGacha').style.display = 'flex';
+                document.getElementById('btnGroupReview').style.display = 'none';
+            } else {
+                document.getElementById('btnGroupGacha').style.display = 'none';
+                document.getElementById('btnGroupReview').style.display = 'flex';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        // --- 關閉卡片邏輯 ---
+        function closeCard(action) {
+            document.getElementById('cardModal').style.display = 'none';
+            document.getElementById('droppedCapsule').style.display = 'none';
+
+            if (action === 'review') return; // 純回顧，不影響進度
+
+            // 扭蛋結束後的動作
+            unlockSlot(currentStage);
+            currentStage++;
+
+            // 檢查是否還有下一顆
+            if (currentStage < totalItems) {
+                if (action === 'next') {
+                    // 繼續抽：按鈕恢復
+                    btn.disabled = false;
+                } else if (action === 'end') {
+                    // 結束扭蛋：按鈕鎖定，顯示結語
+                    btn.innerText = "END";
+                    btn.disabled = true;
+                    showEndScreen();
+                }
+            } else {
+                // 已全數抽完
+                btn.innerText = "END";
+                btn.disabled = true;
+                showEndScreen();
+            }
+        }
+
+        function unlockSlot(index) {
+            collected[index] = true;
+            const slot = document.getElementById(`slot${index}`);
+            const data = gachaData[index];
+            slot.classList.add('unlocked');
+            const svg = slot.querySelector('svg');
+            svg.style.fill = data.colorVar;
+            svg.style.filter = "none";
+        }
+
+        // --- 回顧卡片 ---
+        function reviewCard(index) {
+            if (collected[index]) {
+                showCard(index, 'review');
+            }
+        }
+
+        // --- 結語與彩帶 ---
+        function showEndScreen() {
+            // 控制「再抽一顆」按鈕的顯示
+            if (currentStage >= totalItems) {
+                resumeBtn.style.display = 'none'; // 已抽完，不顯示
+            } else {
+                resumeBtn.style.display = 'inline-block'; // 未抽完，顯示
+            }
+
+            endScreen.style.display = 'block';
+            setTimeout(() => {
+                // 平滑滾動到底部顯示結語
+                endScreen.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+            
+            fireConfetti();
+        }
+
+        // --- 繼續遊玩邏輯 ---
+        function resumeGame() {
+            endScreen.style.display = 'none';
+            btn.innerText = "PUSH";
+            btn.disabled = false;
+            // 滾動回扭蛋機位置
+            machine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function fireConfetti() {
+            const colors = ['#82ABA3', '#FEC37D', '#B3CAD8', '#E7A4E4', '#FF6B6B'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+
+        // --- 彩蛋書籤 ---
+        function showBookmark() {
+            document.getElementById('bookmarkModal').style.display = 'flex';
+        }
+        function closeBookmark(e) {
+            if (e.target.id === 'bookmarkModal') {
+                document.getElementById('bookmarkModal').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
